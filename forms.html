@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head >
+   <title>Try v1.2 Bootstrap Online</title>
+   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script src="ng-mdl.js"></script>
+</head>
+<body ng-app="mdl">
+
+<div class='container' ng-controller="mdlContrlr">
+   <form class = "form-horizontal" role = "form" ng-submit="onSubmit(theFirstForm.$valid)" novalidate="novalidate" name="theFirstForm">
+      <div class = "form-group">
+         <label for = "firstname" class = "col-sm-2 control-label">First Name</label>
+         <div class = "col-sm-10">
+            <input type = "text" class = "form-control" id = "firstname" placeholder = "Enter First Name" ng-model='formModel.firstname'>
+         </div>
+      </div>
+      <div class = "form-group">
+         <label for = "lastname" class = "col-sm-2 control-label">Last Name</label>
+         <div class = "col-sm-10">
+            <input type = "text" class = "form-control" id = "lastname" placeholder = "Enter Last Name" ng-model='formModel.lastname'>
+         </div>
+      </div>
+      <div class = "form-group" 
+      ng-class="{
+                  'has-error':!theFirstForm.email.$valid && (!theFirstForm.$pristine || theFirstForm.$submitted),
+                  'has-success': theFirstForm.email.$valid && (!theFirstForm.$pristine || theFirstForm.$submitted)
+               }"
+      >
+         <label for = "email" class = "col-sm-2 control-label" >Email</label>
+         <div class = "col-sm-10">
+            <input   type = "email" 
+                     class = "form-control" 
+                     id = "email" 
+                     placeholder = "Enter your email" 
+                     ng-model='formModel.email' 
+                     required ="required"
+                     name = 'email'
+                     >
+            <p class="help-block" ng-show="theFirstForm.email.$error.required && (!theFirstForm.$pristine || theFirstForm.$submitted)">
+               This field is required.
+            </p>
+            <p class="help-block" ng-show="theFirstForm.email.$error.email && (!theFirstForm.$pristine || theFirstForm.$submitted)">
+               Please enter a valid email.
+            </p>
+            <pre>Validation ? {{ theFirstForm.email.$error | json }} </pre>
+            <pre>Field Valid ? {{ theFirstForm.email.$valid }} </pre>
+            <pre>Field pristine ? {{ theFirstForm.$pristine }} </pre>
+            <pre>Form Submitted ? {{ theFirstForm.$submitted }} </pre>
+         </div>
+      </div>
+      <div class = "form-group">
+         <label for = "sex" class = "col-sm-2 control-label">Choose Sex</label>
+         <div class = "col-sm-10">
+            <select name='sex' id='sex' class = "form-control" ng-model="formModel.sex">
+               <option value="">Please choose </option>
+               <option value="male">Male</option>
+               <option value="female">Female</option>
+            </select>
+            
+         </div>
+      </div>
+
+      <div class = "form-group">
+         <div class = "col-sm-offset-2 col-sm-10">
+            <div class = "checkbox">
+               <label><input type = "checkbox" ng-model='formModel.rememberme'> Remember me</label>
+            </div>
+         </div>
+      </div>
+      <div class = "form-group">
+         <div class = "col-sm-offset-2 col-sm-10">
+            <button type = "submit" class = "btn btn-default" >Sign in</button>
+         </div>
+      </div>
+   </form>
+   <pre> {{ theFirstForm | json}} </pre>
+</div>
+
+</body>
+</html>
