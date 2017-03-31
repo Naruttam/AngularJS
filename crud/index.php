@@ -32,6 +32,7 @@
         <title>Angular CRUD</title>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
         <link href="nginputtags/ng-tags-input.min.css" rel="stylesheet">
+
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -96,7 +97,8 @@
                             ng-required             =   'true'
                             max-tags                =   "5"
                             allow-leftover-text     =   "false"
-                            on-tag-adding           =   "foofunc($tag)" >
+                            on-tag-adding           =   "foofunc($tag)"
+                            on-tag-added            =   "tooltip($tag)" >
                         </tags-input>
                         <p class="help-block" ng-show="theFirstForm.tags.$error.minTags && (!theFirstForm.$pristine)">
                             Please enter at least three tags.
@@ -171,7 +173,7 @@
                 <div class = "form-group">
                     <label for = "sex" class = "col-sm-2 control-label">Choose City</label>
                     <div class = "col-sm-10">
-                        <select ng-model="formModel.selCity" class = "form-control" 
+                        <select multiple ng-model="formModel.selCity" class = "form-control" 
                                 ng-options="item.city_name for item in cities">
                             <option value="">Select</option>
                         </select>
@@ -198,3 +200,11 @@
         </div>
     </body>
 </html>
+<script type="text/javascript">
+    $(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+        placement : 'top',
+        trigger : 'hover'
+    });
+});
+</script>

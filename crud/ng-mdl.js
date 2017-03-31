@@ -1,7 +1,7 @@
 var app = angular.module('mdl', ['ngTagsInput']);
 
 app.controller('mdlContrlr', function($scope, $http){
-	$scope.formModel = {};
+	$scope.formModel 	= {};
 
 	$scope.records 		= listdata;
 	$scope.statedata 	= states;
@@ -16,6 +16,8 @@ app.controller('mdlContrlr', function($scope, $http){
 	
 	$scope.edit		=	function(id){
 		var custid = id;
+		
+
 		$http.post("edit.php", {id:custid}).success(function(data){
 				var arr = data[0].tags.split(' | ');
 				$scope.formModel.tags = arr;
@@ -32,7 +34,7 @@ app.controller('mdlContrlr', function($scope, $http){
 			    	}
 				}
 				$scope.formModel.state = $scope.statedata[idx];
-
+				$scope.getCities();
 
 			}).error(function(data){
 				console.log(":-(")
@@ -65,12 +67,26 @@ app.controller('mdlContrlr', function($scope, $http){
 		}
 		return patte.test(tag.text);
 	}
+	$scope.tooltip	=	function(tag){
+		console.log(tag);
+		//$('span:contains(tag.text)').addClass('sponz');
+
+		if ($('span:contains(tag.text)')){
+			$('span').attr({
+				"data-toggle" : "popover",
+				"title" : "Popover title",
+				"data-content" : "Default popover"
+			});
+			
+			alert("Match Found");
+		}
+	}
 
 	$scope.onSubmit = function(valid){
 		if(valid){
 			console.log($scope.statedata[3]);
 			console.log("Submitted");
-			console.log($scope.formModel.state);
+			console.log($scope.formModel);
 			$http.post("submitform.php", $scope.formModel).
 			success(function(data){
 				console.log(":-)")
