@@ -2,6 +2,11 @@
 include_once 'dbconfig.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST)){
     $_POST = json_decode(file_get_contents('php://input'), true);
+    
+    foreach ($_POST as $key => $value) {
+    	$finalData = $value['formData'][0];
+    }
+    
 }
 if(isset($_POST['firstname']) && $_POST['firstname'] == 'error')
 {
@@ -9,23 +14,23 @@ if(isset($_POST['firstname']) && $_POST['firstname'] == 'error')
 }
 else
 {
-	$id = $_POST['id'];
-
+	$id = $finalData['id'];
+	
 	if($id){
 
-		if($_POST['tags']){
-			foreach ($_POST['tags'] as $key => $value) {
+		if($finalData['tags']){
+			foreach ($finalData['tags'] as $key => $value) {
 				$tagsArray[] = $value['text']; 
 			}
 			$tags = implode(" | ", $tagsArray);
 		}
 
 		$update_array = array( array(
-		'first_name' 	=> $_POST['firstname'],
-		'last_name'		=> $_POST['lastname'],
-		'email'			=> $_POST['email'],
-		'sex'			=> $_POST['sex'],
-		'state'			=> $_POST['state']['state'],
+		'first_name' 	=> $finalData['firstname'],
+		'last_name'		=> $finalData['lastname'],
+		'email'			=> $finalData['email'],
+		'sex'			=> $finalData['sex'],
+		'state'			=> $finalData['state']['state'],
 		'tags'			=> $tags
 		));
 
@@ -48,22 +53,22 @@ else
 	}
 	else{
 
-		if($_POST['tags']){
-			foreach ($_POST['tags'] as $key => $value) {
+		if($finalData['tags']){
+			foreach ($finalData['tags'] as $key => $value) {
 				$tagsArray[] = $value['text']; 
 			}
 			$tags = implode(" | ", $tagsArray);
 		}
 
 		$insert_array = array( array(
-			'first_name' 	=> $_POST['firstname'],
-			'last_name'		=> $_POST['lastname'],
-			'email'			=> $_POST['email'],
-			'sex'			=> $_POST['sex'],
-			'state'			=> $_POST['state']['state'],
+			'first_name' 	=> $finalData['firstname'],
+			'last_name'		=> $finalData['lastname'],
+			'email'			=> $finalData['email'],
+			'sex'			=> $finalData['sex'],
+			'state'			=> $finalData['state']['state'],
 			'tags'			=> $tags
 		));
-
+		/*print_r($insert_array); exit();*/
 		if(is_array($insert_array)){
 		    foreach($insert_array as $key => $value){
 		    $fname =  $value['first_name'];

@@ -36,167 +36,309 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
         <script src="nginputtags/ng-tags-input.min.js"></script>
         <script src="ng-mdl.js"></script>
     </head>
     <body ng-app="mdl">
         <div class='container' ng-controller="mdlContrlr">
-           
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
-                        <th>Email</th>
-                        <th>Sex</th>
-                        <th>State</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+            <button type="button" class="btn btn-success" id="Addbutton">ADD Template</button>
 
-                <tbody>
-                    <tr ng-repeat="x in records">
-                        <td>{{ x.first_name}}</td>
-                        <td>{{ x.last_name}}</td>
-                        <td>{{ x.email}}</td>
-                        <td>{{ x.sex}}</td>
-                        <td>{{ x.state}}</td>
-                        <td><a href="javascript:void(0);" ng-click="edit(x.id)">Edit</a></td>
-                    </tr>
+            <div id="listing">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Firstname</th>
+                            <th>Lastname</th>
+                            <th>Email</th>
+                            <th>Sex</th>
+                            <th>State</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
-                </tbody>
-            </table>
+                    <tbody>
+                        <tr ng-repeat-start="x in records">
+                            <td>{{ x.first_name}}</td>
+                            <td>{{ x.last_name}}</td>
+                            <td>{{ x.email}}</td>
+                            <td>{{ x.sex}}</td>
+                            <td>{{ x.state}}</td>
+                            <td><a href="javascript:void(0);" ng-click="edit(x.id, 'theFirstFormtest')">Edit</a></td>
+                        </tr>
+                        <tr ng-repeat-end>
+                            <td colspan=5>
+                                <form class = "form-horizontal" role = "form" ng-submit="onSubmit(theFirstFormtest.$valid)" novalidate="novalidate" name="theFirstFormtest" ng-repeat="form in forms">
+                                    <div ng-repeat="formModel in form.formData"><!-- testing -->   
+                                        <div ng-if="formModel.id">
+                                            <pre>{{ formModel.id | json}}</pre>
+                                            <div class = "form-group">
+                                                <label for = "firstname" class = "col-sm-2 control-label">First Name</label>
 
-           <form class = "form-horizontal" role = "form" ng-submit="onSubmit(theFirstForm.$valid)" novalidate="novalidate" name="theFirstForm">
-                <div class = "form-group">
-                <label for = "firstname" class = "col-sm-2 control-label">First Name</label>
-                    <div class = "col-sm-10">
-                        <input type = "text" class = "form-control" id = "firstname" placeholder = "Enter First Name" ng-model='formModel.firstname'>
-                    </div>
-                </div>
-                <div class = "form-group">
-                <label for = "lastname" class = "col-sm-2 control-label">Last Name</label>
-                    <div class = "col-sm-10">
-                        <input type = "text" class = "form-control" id = "lastname" placeholder = "Enter Last Name" ng-model='formModel.lastname'>
-                    </div>
-                </div>
+                                                <div class = "col-sm-10">
+                                                    <input type = "text" class = "form-control" id = "firstname" placeholder = "Enter First Name" ng-model='formModel.firstname'>
+                                                </div>
+                                            </div>
+                                            <div class = "form-group">
+                                                <label for = "lastname" class = "col-sm-2 control-label">Last Name</label>
+                                                <div class = "col-sm-10">
+                                                    <input type = "text" class = "form-control" id = "lastname" placeholder = "Enter Last Name" ng-model='formModel.lastname'>
+                                                </div>
+                                            </div>
 
-                <div 
-                    class = "form-group"
-                    ng-class    ="{
-                        'has-error':!theFirstForm.tags.$valid && (!theFirstForm.tags.$pristine || theFirstForm.$submitted),
-                        'has-success': theFirstForm.tags.$valid && (!theFirstForm.tags.$pristine || theFirstForm.$submitted)
-                    }"
-                >
-                    <label for = "lastname" class = "col-sm-2 control-label">Tags</label>
-                    <div class = "col-sm-10">
-                        <tags-input 
-                            name                    =   "tags"
-                            ng-model                =   "formModel.tags" 
-                            add-on-blur             =   "false"
-                            ng-required             =   'true'
-                            max-tags                =   "5"
-                            allow-leftover-text     =   "false"
-                            on-tag-adding           =   "foofunc($tag)"
-                            on-tag-added            =   "tooltip($tag)" >
-                        </tags-input>
-                        <p class="help-block" ng-show="theFirstForm.tags.$error.minTags && (!theFirstForm.$pristine)">
-                            Please enter at least three tags.
-                        </p><p class="help-block" ng-show="showEmailError && (!theFirstForm.$pristine)">
-                            Please enter a valid email.
-                        </p>
-                        <p>Model: {{formModel.tags}}</p>
-                        <p>$pristine: {{theFirstForm.tags.$pristine}}</p>
-                        <p>$dirty: {{theFirstForm.tags.$dirty}}</p>
-                        <p>$valid: {{theFirstForm.tags.$valid}}</p>
-                        <p>$error: {{theFirstForm.tags.$error}} </p>
-                    </div>
-                    
-                </div>
-
-
-                <div 
-                    class       = "form-group" 
-                    ng-class    ="{
-                        'has-error':!theFirstForm.email.$valid && (!theFirstForm.$pristine || theFirstForm.$submitted),
-                        'has-success': theFirstForm.email.$valid && (!theFirstForm.$pristine || theFirstForm.$submitted)
-                    }"
-                >
-                    <label for = "email" class = "col-sm-2 control-label" >Email</label>
-                    <div class = "col-sm-10">
-                        <input  type = "email" 
-                                class = "form-control" 
-                                id = "email" 
-                                placeholder = "Enter your email" 
-                                ng-model='formModel.email' 
-                                required ="required"
-                                name = 'email'
-                        >
-                        <p  class="help-block" 
-                            ng-show="theFirstForm.email.$error.required && (!theFirstForm.$pristine || theFirstForm.$submitted)">
-                            This field is required.
-                        </p>
-                        <p  class="help-block" 
-                            ng-show="theFirstForm.email.$error.email && (!theFirstForm.$pristine || theFirstForm.$submitted)">
-                            Please enter a valid email.
-                        </p>
-                        <!--  <pre>Validation ? {{ theFirstForm.email.$error | json }} </pre>
-                        <pre>Field Valid ? {{ theFirstForm.email.$valid }} </pre>
-                        <pre>Field pristine ? {{ theFirstForm.$pristine }} </pre>
-                        <pre>Form Submitted ? {{ theFirstForm.$submitted }} </pre> -->
-                    </div>
-                </div>
-                <div class = "form-group">
-                    <label for = "sex" class = "col-sm-2 control-label">Choose Sex</label>
-                    <div class = "col-sm-10">
-                        <select name='sex' id='sex' class = "form-control" ng-model="formModel.sex">
-                           <option value="">Please choose </option>
-                           <option value="male">Male</option>
-                           <option value="female">Female</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class = "form-group">
-                    <label for = "sex" class = "col-sm-2 control-label">Choose state</label>
-                    <div class = "col-sm-10">
-                        <select ng-model  ="formModel.state" class = "form-control" 
-                                ng-options="item.state for item in statedata"
-                                ng-change ="getCities()" >
-                            <option value="">Select</option>
-                        </select>
-                        
-                        <!-- <pre>{{ formModel.state | json}} </pre> -->
-                    </div>
-                </div>
-
-                <div class = "form-group">
-                    <label for = "sex" class = "col-sm-2 control-label">Choose City</label>
-                    <div class = "col-sm-10">
-                        <select multiple ng-model="formModel.selCity" class = "form-control" 
-                                ng-options="item.city_name for item in cities">
-                            <option value="">Select</option>
-                        </select>
-                        <!-- <pre>{{ formModel.state | json}} </pre> -->
-                    </div>
-                </div>
+                                            <div 
+                                                class = "form-group"
+                                                ng-class    ="{
+                                                    'has-error':!theFirstFormtest.tags.$valid && (!theFirstFormtest.tags.$pristine || theFirstFormtest.$submitted),
+                                                    'has-success': theFirstFormtest.tags.$valid && (!theFirstFormtest.tags.$pristine || theFirstFormtest.$submitted)
+                                                }"
+                                            >
+                                                <label for = "lastname" class = "col-sm-2 control-label">Tags</label>
+                                                <div class = "col-sm-10">
+                                                    <tags-input 
+                                                        name                    =   "tags"
+                                                        ng-model                =   "formModel.tags" 
+                                                        add-on-blur             =   "false"
+                                                        ng-required             =   'true'
+                                                        max-tags                =   "5"
+                                                        allow-leftover-text     =   "false"
+                                                        on-tag-adding           =   "foofunc($tag)"
+                                                        on-tag-added            =   "tooltip($tag)" >
+                                                    </tags-input>
+                                                    <p class="help-block" ng-show="theFirstFormtest.tags.$error.minTags && (!theFirstFormtest.$pristine)">
+                                                        Please enter at least three tags.
+                                                    </p><p class="help-block" ng-show="showEmailError && (!theFirstFormtest.$pristine)">
+                                                        Please enter a valid email.
+                                                    </p>
+                                                    <p>Model: {{formModel.tags}}</p>
+                                                    <p>$pristine: {{theFirstFormtest.tags.$pristine}}</p>
+                                                    <p>$dirty: {theFirstFormtest.tags.$dirty}}</p>
+                                                    <p>$valid: {{theFirstFormtest.tags.$valid}}</p>
+                                                    <p>$error: {{theFirstFormtest.tags.$error}} </p>
+                                                </div>
+                                            </div>
 
 
-                <div class = "form-group">
-                    <div class = "col-sm-offset-2 col-sm-10">
-                        <div class = "checkbox">
-                            <label><input type = "checkbox" ng-model='formModel.rememberme'> Remember me</label>
+                                            <div 
+                                                class       = "form-group" 
+                                                ng-class    ="{
+                                                    'has-error':!theFirstFormtest.email.$valid && (!theFirstFormtest.$pristine || theFirstFormtest.$submitted),
+                                                    'has-success': theFirstFormtest.email.$valid && (!theFirstFormtest.$pristine || theFirstFormtest.$submitted)
+                                                }"
+                                            >
+                                                <label for = "email" class = "col-sm-2 control-label" >Email</label>
+                                                <div class = "col-sm-10">
+                                                    <input  type = "email" 
+                                                            class = "form-control" 
+                                                            id = "email" 
+                                                            placeholder = "Enter your email" 
+                                                            ng-model='formModel.email' 
+                                                            required ="required"
+                                                            name = 'email'
+                                                    >
+                                                    <p  class="help-block" 
+                                                        ng-show="theFirstFormtest.email.$error.required && (!theFirstFormtest.$pristine || theFirstFormtest.$submitted)">
+                                                        This field is required.
+                                                    </p>
+                                                    <p  class="help-block" 
+                                                        ng-show="theFirstFormtest.email.$error.email && (!theFirstFormtest.$pristine || theFirstFormtest.$submitted)">
+                                                        Please enter a valid email.
+                                                    </p>
+                                                    <!--  <pre>Validation ? {{ theFirstForm.email.$error | json }} </pre>
+                                                    <pre>Field Valid ? {{ theFirstForm.email.$valid }} </pre>
+                                                    <pre>Field pristine ? {{ theFirstForm.$pristine }} </pre>
+                                                    <pre>Form Submitted ? {{ theFirstForm.$submitted }} </pre> -->
+                                                </div>
+                                            </div>
+                                            <div class = "form-group">
+                                                <label for = "sex" class = "col-sm-2 control-label">Choose Sex</label>
+                                                <div class = "col-sm-10">
+                                                    <select name='sex' id='sex' class = "form-control" ng-model="formModel.sex">
+                                                       <option value="">Please choose </option>
+                                                       <option value="male">Male</option>
+                                                       <option value="female">Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class = "form-group">
+                                                <label for = "sex" class = "col-sm-2 control-label">Choose state</label>
+                                                <div class = "col-sm-10">
+                                                    <select
+                                                            ng-model  ="formModel.state" class = "form-control" 
+                                                            ng-options="item.state for item in statedata"
+                                                            ng-change ="getCities()" >
+                                                        <option value="">Select</option>
+                                                    </select>
+                                                    
+                                                    <!-- <pre>{{ formModel.state | json}} </pre> -->
+                                                </div>
+                                            </div>
+
+                                            <div class = "form-group">
+                                                <label for = "sex" class = "col-sm-2 control-label">Choose City</label>
+                                                <div class = "col-sm-10">
+                                                    <select multiple ng-model="formModel.selCity" class = "form-control" 
+                                                            ng-options="item.city_name for item in cities">
+                                                        <option value="">Select</option>
+                                                    </select>
+                                                    <!-- <pre>{{ formModel.state | json}} </pre> -->
+                                                </div>
+                                            </div>
+
+
+                                            <div class = "form-group">
+                                                <div class = "col-sm-offset-2 col-sm-10">
+                                                    <div class = "checkbox">
+                                                        <label><input type = "checkbox" ng-model='formModel.rememberme'> Remember me</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class = "form-group">
+                                                <div class = "col-sm-offset-2 col-sm-10">
+                                                    <button type = "submit" class = "btn btn-default" >Submit</button>
+                                                </div>
+                                            </div>
+                                        </div><!-- ng if -->
+                                    <div ><!-- testing -->
+                                </form>
+                                <!-- <pre> formModel.tags {{ forms.formModel.tags  }} </pre>
+                                <pre> form {{ form }} | json}} </pre> -->
+                            <td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                
+                 <!-- The Default Form -->
+
+                <form class = "form-horizontal" role = "form" ng-submit="onSubmit(theFirstForm.$valid)" novalidate="novalidate" name="theFirstForm" id="DefaultForm">
+                    <div class = "form-group">
+                        <label for = "firstname" class = "col-sm-2 control-label">First Name</label>
+                        <div class = "col-sm-10">
+                            <input type = "text" class = "form-control" id = "firstname" placeholder = "Enter First Name" ng-model='formModel.firstname'>
                         </div>
                     </div>
-                </div>
-
-                <div class = "form-group">
-                    <div class = "col-sm-offset-2 col-sm-10">
-                        <button type = "submit" class = "btn btn-default" >Submit</button>
+                    <div class = "form-group">
+                        <label for = "lastname" class = "col-sm-2 control-label">Last Name</label>
+                        <div class = "col-sm-10">
+                            <input type = "text" class = "form-control" id = "lastname" placeholder = "Enter Last Name" ng-model='formModel.lastname'>
+                        </div>
                     </div>
-                </div>
-            </form>
-          <!--  <pre> {{ theFirstForm | json}} </pre> -->
+
+                    <div 
+                        class = "form-group"
+                        ng-class    ="{
+                            'has-error':!theFirstForm.tags.$valid && (!theFirstForm.tags.$pristine || theFirstForm.$submitted),
+                            'has-success': theFirstForm.tags.$valid && (!theFirstForm.tags.$pristine || theFirstForm.$submitted)
+                        }"
+                    >
+                        <label for = "lastname" class = "col-sm-2 control-label">Tags</label>
+                        <div class = "col-sm-10">
+                            <tags-input 
+                                name                    =   "tags"
+                                ng-model                =   "formModel.tags" 
+                                add-on-blur             =   "false"
+                                ng-required             =   'true'
+                                max-tags                =   "5"
+                                allow-leftover-text     =   "false"
+                                on-tag-adding           =   "foofunc($tag)"
+                                on-tag-added            =   "tooltip($tag)" >
+                            </tags-input>
+                            <p class="help-block" ng-show="theFirstForm.tags.$error.minTags && (!theFirstForm.$pristine)">
+                                Please enter at least three tags.
+                            </p><p class="help-block" ng-show="showEmailError && (!theFirstForm.$pristine)">
+                                Please enter a valid email.
+                            </p>
+                            <p>Model: {{formModel.tags}}</p>
+                            <p>$pristine: {{theFirstForm.tags.$pristine}}</p>
+                            <p>$dirty: {{theFirstForm.tags.$dirty}}</p>
+                            <p>$valid: {{theFirstForm.tags.$valid}}</p>
+                            <p>$error: {{theFirstForm.tags.$error}} </p>
+                        </div>
+                    </div>
+                    <div 
+                        class       = "form-group" 
+                        ng-class    ="{
+                            'has-error':!theFirstForm.email.$valid && (!theFirstForm.$pristine || theFirstForm.$submitted),
+                            'has-success': theFirstForm.email.$valid && (!theFirstForm.$pristine || theFirstForm.$submitted)
+                        }"
+                    >
+                        <label for = "email" class = "col-sm-2 control-label" >Email</label>
+                        <div class = "col-sm-10">
+                            <input  type = "email" 
+                                    class = "form-control" 
+                                    id = "email" 
+                                    placeholder = "Enter your email" 
+                                    ng-model='formModel.email' 
+                                    required ="required"
+                                    name = 'email'
+                            >
+                            <p  class="help-block" 
+                                ng-show="theFirstForm.email.$error.required && (!theFirstForm.$pristine || theFirstForm.$submitted)">
+                                This field is required.
+                            </p>
+                            <p  class="help-block" 
+                                ng-show="theFirstForm.email.$error.email && (!theFirstForm.$pristine || theFirstForm.$submitted)">
+                                Please enter a valid email.
+                            </p>
+                            <pre>Validation ? {{ theFirstForm.email.$error | json }} </pre>
+                            <pre>Field Valid ? {{ theFirstForm.email.$valid }} </pre>
+                            <pre>Field pristine ? {{ theFirstForm.$pristine }} </pre>
+                            <pre>Form Submitted ? {{ theFirstForm.$submitted }} </pre>
+                        </div>
+                    </div>
+                    <div class = "form-group">
+                        <label for = "sex" class = "col-sm-2 control-label">Choose Sex</label>
+                        <div class = "col-sm-10">
+                            <select name='sex' id='sex' class = "form-control" ng-model="formModel.sex">
+                               <option value="">Please choose </option>
+                               <option value="male">Male</option>
+                               <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class = "form-group">
+                        <label for = "sex" class = "col-sm-2 control-label">Choose state</label>
+                        <div class = "col-sm-10">
+                            <select
+                                    ng-model  ="formModel.state" class = "form-control" 
+                                    ng-options="item.state for item in statedata"
+                                    ng-change ="getCities()" >
+                                <option value="">Select</option>
+                            </select>
+                            
+                            
+                        </div>
+                    </div>
+
+                    <div class = "form-group">
+                        <label for = "sex" class = "col-sm-2 control-label">Choose City</label>
+                        <div class = "col-sm-10">
+                            <select multiple ng-model="formModel.selCity" class = "form-control" 
+                                    ng-options="item.city_name for item in cities">
+                                <option value="">Select</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <div class = "form-group">
+                        <div class = "col-sm-offset-2 col-sm-10">
+                            <div class = "checkbox">
+                                <label><input type = "checkbox" ng-model='formModel.rememberme'> Remember me</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class = "form-group">
+                        <div class = "col-sm-offset-2 col-sm-10">
+                            <button type = "submit" class = "btn btn-default" >Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>   
         </div>
     </body>
 </html>
@@ -206,5 +348,13 @@
         placement : 'top',
         trigger : 'hover'
     });
+
+    $("#Addbutton").click(function() {
+        console.log('clicked');
+    $('html, body').animate({
+        scrollTop: $("#DefaultForm").offset().top
+    }, 2000);
+});
+
 });
 </script>
