@@ -20,10 +20,50 @@
             $statearray[] = $row;
         }
     }
+
+    $text1 = "sample->text-1";
+    $text2  = "sample->text-2";
+    $text3  = "sample->text-3";
+
+    $val1    = "Radiology";
+    $val2    = "Radiology1";
+    $val3    = "Radiology3";
+    $val4    = "Radiology4";
+    $val5    = "Radiology5";
+    $val6    = "Radiology6";
+    $val7    = "Radiology7";
+
+   /* $butt[$text1][] = array($val1, "val1");
+    $butt[$text1][] = array($val2, "val2");
+    $butt[$text1][] = array($val3, "val3");*/
+    //$arr[]  = $butt;
+
+    /*$butt[$text2]['tech'] = $val5;
+    $butt[$text2]['id']   = 1;
+    $butt[$text2]['tech'] = $val6;
+    $butt[$text2]['id'] = 6;
+    $arr[]  = $butt;*/
+
+    $textArray = array($text1, $text1,  $text2);
+
+    $i = 1;
+    foreach ($textArray as $key => $value) {
+        $butt[$value]['tech'] = $value.$i;
+        $butt[$value]['id']   = $i;
+        $arr[]  = $butt;
+
+        unset($butt);
+        $i++;
+        
+    }
+   /* echo "<pre>";
+    echo json_encode($arr, JSON_PRETTY_PRINT);
+    echo "</pre>";*/
 ?>
     <script type="text/javascript">
         var listdata = <?php echo json_encode($listarray)?>;
         var states  = <?php echo json_encode($statearray)?>;
+        var tagsArray = <?php echo json_encode($arr)?>;
     </script>
 
 <!DOCTYPE html>

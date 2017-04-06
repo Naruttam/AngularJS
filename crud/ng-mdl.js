@@ -29,8 +29,40 @@ app.controller('mdlContrlr', function($scope, $http){
 	/*states.forEach(function(obj) { 
 		console.log(obj.state); 
 	});*/
+	var editTags = {};
 
+	console.log(tagsArray);
+
+	function PushIt(editTags,key,value)
+	{
+	    if(editTags[key])
+	    {
+	        editTags[key][editTags[key].length] = value;
+	    }
+	    else
+	    {
+	        editTags[key] = [value];
+	    }
+	}
 	
+	for(var i = 0; i < tagsArray.length; i ++){
+
+		for(var key in tagsArray[i]){
+			console.log(tagsArray[i][key]);
+			//PushIt((editTags, key, tagsArray[i][key]));
+			
+			if(editTags[key])
+			{
+				editTags[key][editTags[key].length] = tagsArray[i][key];
+			}else{
+				editTags[key] = [tagsArray[i][key]];
+			}
+		}
+	}
+
+	console.log(editTags);
+
+
 	$scope.edit		=	function(id, formName){
 		var custid = id;
 		console.log($scope.formModel);
