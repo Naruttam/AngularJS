@@ -22,6 +22,7 @@ app.controller('mdlContrlr', function($scope, $http){
 	$scope.formModel 	= {};
 	$scope.records 		= listdata;
 	$scope.statedata 	= states;
+	var editTags 		= {};
 	//$scope.formModel.tags = ['Tag 1', 'Tag 2'];
 	//$scope.formModel.state 		= states[3];
 	//console.log(states[3].state);
@@ -29,9 +30,58 @@ app.controller('mdlContrlr', function($scope, $http){
 	/*states.forEach(function(obj) { 
 		console.log(obj.state); 
 	});*/
-	var editTags = {};
 
-	console.log(tagsArray);
+	$scope.selectedState 			= "Select";
+	$scope.selectedCity 			= "Select";
+
+	$scope.addToGroupErrorDiv 		= false;
+	$scope.addToGroupErrorDivMsg 	= '';
+	$scope.emailTagError 			= false;
+	$scope.emailTagErrorMsg 		= '';
+
+	$scope.isDisableCity    		= true;
+
+	$scope.getSelectedstate 		= function(statename){
+		$scope.selectedState 		= statename;
+		$scope.addToGroupErrorDiv 	= false;
+		$scope.selectedCity 		= "Select";
+	}
+
+	$scope.getSelectedcity 			= function(cityname){
+		$scope.selectedCity 		= cityname;
+		$scope.addToGroupErrorDiv 	= false;
+	}
+
+	$scope.setAction        = function(Select){
+		$scope.addToGroupErrorDiv = true
+		$scope.addToGroupErrorDivMsg = "This filed is required";
+		$scope.selectedState 	= "Select";
+		$scope.selectedCity 	= "Select";
+		$scope.isDisableCity    = true;
+	}
+
+
+	$scope.cityDropdown = function(){
+		$http({
+	        method: 'POST',
+	        url: 'cities.php',
+	        data: {state : $scope.selectedState},
+	        headers: {'Content-Type': 'application/json'}  // set the headers so angular passing info as form data (not request payload)
+        }).success(function(data) {
+            if(data.success){
+                $scope.cities 						= 	data.citydata;
+                $scope.selectedCity 				= 	"Select";
+                $scope.isDisableCity           		= 	false;
+            }else{
+               /* $scope.subbodyPart                  =   "";
+                $scope.issbBDisabled                =   true;*/
+                $scope.isDisableCity           		= true;
+            }
+            console.log(data);
+        });
+	}
+
+	//console.log(tagsArray);
 
 	function PushIt(editTags,key,value)
 	{
@@ -48,7 +98,7 @@ app.controller('mdlContrlr', function($scope, $http){
 	for(var i = 0; i < tagsArray.length; i ++){
 
 		for(var key in tagsArray[i]){
-			console.log(tagsArray[i][key]);
+			//console.log(tagsArray[i][key]);
 			//PushIt((editTags, key, tagsArray[i][key]));
 			
 			if(editTags[key])
@@ -58,10 +108,41 @@ app.controller('mdlContrlr', function($scope, $http){
 				editTags[key] = [tagsArray[i][key]];
 			}
 		}
+		//console.log()
 	}
 
-	console.log(editTags);
+	//console.log(editTags);
 
+	/*for (var i =0; i < someArray.length; i++){
+		if (someArray[i].name === "Kristian") {
+			someArray.splice(i,1);
+			break;
+		}
+	}*/
+	$scope.allSelected = false;
+
+	$scope.cbChecked = function(){
+	    $scope.allSelected = true;
+		angular.forEach($scope.cities, function(v, k) {
+			if(!v.selected){
+				$scope.allSelected = false;
+			}
+		});
+  	}
+
+	$scope.toggleAll = function() {
+		
+	    var bool = true;
+	    if ($scope.allSelected) {
+	      	bool = false;
+	    }
+	    angular.forEach($scope.cities, function(v, k) {
+	      	v.selected = !bool;
+	      	$scope.allSelected = !bool;
+	    });
+  	}
+
+  	
 
 	$scope.edit		=	function(id, formName){
 		var custid = id;
@@ -134,10 +215,12 @@ app.controller('mdlContrlr', function($scope, $http){
 	}
 	$scope.foofunc 	= function(tag){
 		var patte = new RegExp(/^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+.)+[A-Za-z]{2,}/);
-		if(patte.test(tag.text)){
-			$scope.showEmailError = false;
+		
+		if(patte.test(tag.text) || tag.text == ''){
+			$scope.emailTagError = false;
 		}else{
-			$scope.showEmailError = true;
+			$scope.emailTagError = true;
+			$scope.emailTagErrorMsg = 'The Email should be a valid one';
 		}
 		return patte.test(tag.text);
 	}
