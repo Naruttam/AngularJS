@@ -1,0 +1,30 @@
+<!doctype html>
+<html ng-app>
+<head>
+  <title>Codeanywhere with git</title>
+  <style>
+
+  input.ng-invalid.ng-dirty{border:1px solid red;}
+  </style>
+</head>
+<body>
+  <form name="anyfrm">
+  	<div>
+	    <input type="email" name="email" ng-model="user.email" required>
+	    <span ng-show="anyfrm.email.$dirty && anyfrm.email.$error.required"> Required</span>
+	    <span ng-show="anyfrm.email.$dirty && anyfrm.email.$error.email"> Enter a valid email</span>
+
+		<button type="button" class="btn btn-default dropdown-toggle " ng-class="(isDisableTypeofTest) ? 'error_border' : ''" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-init="init();" ng-disabled="isDisableTypeofTest">
+		{{course.template}}<span class="caret"></span>
+		</button>
+
+		<ul class="dropdown-menu">
+			<li><a href="#" ng-click="setAction('Select');">Select</a></li>
+			<li ng-repeat="option in templateType"><a href="javascript:void(0)" ng-click="setEdittemplate(option.type_name, option.event_name);">{{ option.type_name }}</a></li>
+		</ul>
+    </div>
+  </form>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"> </script>
+  <h2> Hello World</h2>
+</body>
+</html>

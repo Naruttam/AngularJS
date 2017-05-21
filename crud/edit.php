@@ -17,6 +17,6 @@ include_once 'dbconfig.php';
 	}
 	
 	/*return $editarray;*/
-	//print_r($editarray); exit();
+	/*print_r($editarray); exit();*/
 	echo json_encode($editarray);
 ?>

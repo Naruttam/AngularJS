@@ -98,6 +98,7 @@
         
         <script src="nginputtags/ng-tags-input.min.js"></script>
         <script src="ng-mdl.js"></script>
+        <script src="validate.js"></script>
         <style>
             tags-input .host {
                 position: relative;
@@ -121,7 +122,7 @@
     </head>
     <body ng-app="mdl">
         <div class='container' ng-controller="mdlContrlr">
-            <button type="button" class="btn btn-success" id="Addbutton">ADD Template</button>
+            <button type="button" class="btn btn-success" id="Addbutton" ng-click="closeEditforms()">ADD Template</button>
 
             <div id="listing">
                 <table class="table table-striped">
@@ -145,7 +146,7 @@
                             <td>{{ x.state}}</td>
                             <td><a href="javascript:void(0);" ng-click="edit(x.id, 'theFirstFormtest')">Edit</a></td>
                         </tr>
-                        <tr ng-repeat-end>
+                        <tr ng-repeat-end ng-show="divShow == x.id">
                             <td colspan=5>
                                 <form class = "form-horizontal" role = "form" ng-submit="onSubmit(theFirstFormtest.$valid)" novalidate="novalidate" name="theFirstFormtest" ng-repeat="form in forms">
                                     <div ng-repeat="formModel in form.formData"><!-- testing -->   
@@ -311,11 +312,11 @@
                                 
                             >
                             <div class="alert alert-danger margintop10" role="alert" 
-                                ng-show="theFirstForm.email.$error.email && (!theFirstForm.$pristine || theFirstForm.$submitted)">
+                                ng-show="theFirstForm.firstname.$error.firstname && (!theFirstForm.firstname.$pristine || theFirstForm.$submitted)">
                                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Please enter a valid Name.
                              </div>
 
-                            <div class="alert alert-danger margintop10" role="alert" ng-show="theFirstForm.email.$error.required && (!theFirstForm.$pristine || theFirstForm.$submitted)">
+                            <div class="alert alert-danger margintop10" role="alert" ng-show="theFirstForm.firstname.$error.required && (!theFirstForm.firstname.$pristine || theFirstForm.firstname.$submitted)">
                                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> This field is required.
                             </div>
                             <!-- emailTagError == true ||   -->
@@ -340,7 +341,7 @@
                         <label for = "lastname" class = "col-sm-2 control-label">Tags</label>
                         <div class = "col-sm-10">
                             <tags-input 
-                                name                    =   "tags"
+                                name                    =   "cctags"
                                 ng-model                =   "formModel.tags" 
                                 add-on-blur             =   "true"
                                 ng-required             =   'false'
@@ -359,7 +360,7 @@
                                 </div>
                             </script>
                             
-                            <div class="alert alert-danger margintop10" role="alert" ng-show="theFirstForm.tags.$invalid">
+                            <div class="alert alert-danger margintop10" role="alert" ng-show="theFirstForm.cctags.$invalid">
                                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>{{emailTagErrorMsg}}
                             </div>
                             <!-- emailTagError == true ||   -->
@@ -367,7 +368,7 @@
                             <p>$pristine: {{theFirstForm.tags.$pristine}}</p>
                             <p>$dirty: {{theFirstForm.tags.$dirty}}</p>
                             <p>$valid: {{theFirstForm.tags.$valid}}</p>
-                             <p>$invalid: {{theFirstForm.tags.$invalid}}</p>
+                             <p>$invalid: {{theFirstForm.cctags.$invalid}}</p>
                             <p>$error: {{theFirstForm.tags.$error}} </p>
                         </div>
                     </div>
@@ -383,10 +384,10 @@
                                     name = 'email'
                             >
                             <div class="alert alert-danger margintop10" role="alert" 
-                                ng-show="theFirstForm.email.$error.email && (!theFirstForm.$pristine || theFirstForm.$submitted)">
+                                ng-show="theFirstForm.email.$error.email && (!theFirstForm.email.$pristine || theFirstForm.$submitted)">
                                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>Please enter a valid email.
                              </div>
-                            <div class="alert alert-danger margintop10" role="alert" ng-show="theFirstForm.email.$error.required && (!theFirstForm.$pristine || theFirstForm.$submitted)">
+                            <div class="alert alert-danger margintop10" role="alert" ng-show="theFirstForm.email.$error.required && (!theFirstForm.email.$pristine || theFirstForm.$submitted)">
                                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> This field is required.
                             </div>
                             
@@ -421,19 +422,24 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a href="#" ng-click="setAction('Select');">Select</a></li>
-                                <li ng-repeat="statelist in statedata"><a href="javascript:void(0)" ng-click="getSelectedstate(statelist.name); cityDropdown()">{{ statelist.name }}</a></li>
+                                <li ng-repeat="statelist in statedata"><a href="javascript:void(0)" ng-click="getSelectedstate(statelist.name); cityDropdown(); isOdd(selectedState);">{{ statelist.name }}</a></li>
                             </ul>
 
-                            <input type="text" name="selectedState" ng-model="selectedState" hidden />
+                            <input 
+                            type="text" 
+                            name="selectedState" 
+                            ng-model="selectedState" 
+                            ui-validate=" 'notBlackListed($value)' "
+                            hidden/>
 
-                            <div class="alert alert-danger margintop10" role="alert" ng-show="theFirstForm.selectedState.$modelValue == 'Select' && (!theFirstForm.$pristine || theFirstForm.$submitted)">
+                            <div class="alert alert-danger margintop10" role="alert" ng-show="theFirstForm.selectedState.$invalid  && (!theFirstForm.selectedState.$pristine || theFirstForm.$submitted)">
                                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> 
                                 Please select a state
                             </div>
-                            
                         </div>
+                        
                     </div>
-
+                        <pre>{{theFirstForm.selectedState.$invalid | json }}</pre>
                     <div class = "form-group">
                         <label for = "sex" class = "col-sm-2 control-label">Choose City</label>
                         <div class = "col-sm-10">

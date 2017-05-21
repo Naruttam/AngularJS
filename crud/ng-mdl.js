@@ -1,4 +1,4 @@
-var app = angular.module('mdl', ['ngTagsInput']);
+var app = angular.module('mdl', ['ngTagsInput', 'ui.validate']);
 
 app.controller('mdlContrlr', function($scope, $http){
 	
@@ -40,6 +40,17 @@ app.controller('mdlContrlr', function($scope, $http){
 	$scope.emailTagErrorMsg 		= '';
 
 	$scope.isDisableCity    		= true;
+
+	$scope.notBlackListed = function(value) {
+        /*var blacklist = ['Select'];
+        return blacklist.indexOf(value) === -1;*/
+        if(value === 'Select'){
+        	return false;
+        }else{
+        	return true;
+        }
+
+    };
 
 	$scope.getSelectedstate 		= function(statename){
 		$scope.selectedState 		= statename;
@@ -145,12 +156,14 @@ app.controller('mdlContrlr', function($scope, $http){
   	
 
 	$scope.edit		=	function(id, formName){
+		
+		
+    	$scope.divShow = id;
 		var custid = id;
 		console.log($scope.formModel);
 
-
-
 		$http.post("edit.php", {id:custid}).success(function(data){
+				/*$scope.divShow  =   $scope.divShow ? false : true;*/
 				var arr = data[0].tags.split(' | ');
 				/*$scope.formModel.tags = arr;
 				$scope.formModel.id = data[0].id;
@@ -160,13 +173,14 @@ app.controller('mdlContrlr', function($scope, $http){
 				$scope.formModel.sex = data[0].sex;*/
 				for(var i = 0; i < $scope.statedata.length; i++) {
 			    	var obj = states[i];
-			    	if(obj.state == data[0].state)
+			    	
+			    	if(obj.name == data[0].state)
 			    	{
 			    		var idx = i;
 			    	}
 				}
 				//$scope.formModel.state = $scope.statedata[idx];
-
+				
 				$scope.forms = [{
 				 	name: formName,
 		      		formData:
@@ -181,6 +195,7 @@ app.controller('mdlContrlr', function($scope, $http){
 		      		}]
 		    	}]
 		    	console.log($scope.forms);
+		    	
 				$scope.getCities();
 
 			}).error(function(data){
@@ -202,10 +217,10 @@ app.controller('mdlContrlr', function($scope, $http){
 	$scope.getCities = function(){
 		//console.log($scope.formModel.state);
 		if(!angular.equals($scope.formModel, {})){
-			var state = 	$scope.formModel.state.state;
+			var state = 	$scope.formModel.state.name;
 		}
 		else{
-			var state = 	$scope.forms[0].formData[0].state.state;
+			var state = 	$scope.forms[0].formData[0].state.name;
 		}
 		
 		$http.post("cities.php", { state: state}).success(function(data){
@@ -283,4 +298,8 @@ app.controller('mdlContrlr', function($scope, $http){
 			console.log("invalid Form")
 		}
 	};
+
+	$scope.closeEditforms = function(){
+		$scope.divShow = false;
+	}
 });
